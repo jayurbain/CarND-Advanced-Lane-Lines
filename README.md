@@ -27,7 +27,6 @@ Image distortion occurs when a camera looks at 3D objects in the real world and 
 
 Camera calibration is performed using the following chessboard calibration images:
 
-![Calibration images](images/calibration_images.png)
 <img src="images/calibration_images.png" alt="Calibration images" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 Given a chessboard calibration image and the known pattern size of inside corners, the OpenCV method **cv2.findChessboardCorners** is used to locate the coordinates of the inside chessboard corners. 
@@ -36,7 +35,6 @@ Given 2D calibration image points **imgpoints** and 3D world points **objp**, **
 
 **cv2.drawChessboardCorners** is used to draw the mapping from the original calibration image to the undistored (calibrated) images as shown below.
 
-![Calibration images](images/calibration_images_line_drawing.png)
 <img src="images/calibration_images_line_drawing.png" alt="images/calibration_images_line_drawing" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 ### Pipeline (single images)
@@ -48,7 +46,6 @@ Given 2D calibration image points **imgpoints** and 3D world points **objp**, **
 Given an image, and the calibration and distortion coefficients, 
 **cv2.undistort** is used to apply a distortion correction to raw images.
 
-![Distortion corrected image](images/distortion_corrected_image.png)
 <img src="images/distortion_corrected_image.png" alt="images/distortion_corrected_image" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
@@ -57,7 +54,6 @@ Given an image, and the calibration and distortion coefficients,
 
 **cv2.cvtColor(undist, cv2.COLOR_BGR2HLS)** is used to convert and undistored **BGR** images to an **HLS** image. Only the saturation channel **'S'** is used. From the **'S'** channel,  a sobel gradient filter is applied in **X** and **Y** dimensions. Gradients in both dimensions are combined and thresholded (thresh_min=10, thresh_max=160_ into binary images as shown below:
 
-![color_sobel_thresholded_images](images/color_sobel_thresholded_images.png)
 <img src="images/color_sobel_thresholded_images.png" alt="images/color_sobel_thresholded_images" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
@@ -66,7 +62,6 @@ Given an image, and the calibration and distortion coefficients,
 
 Four points where selected from the source image for the perspective transformation. Those points are highlighted on the following image.
 
-![lane_original_image](images/lane_original_image.png)
 <img src="images/lane_original_image.png" alt="images/lane_original_image" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 Source and destination points for the transformation:
@@ -82,12 +77,10 @@ Using **cv2.getPerspectiveTransform**, a transformation matrix was calculated, a
 
 The perspective transform was verified by drawing the **src** and **dst** points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image. The result of the transformation on a test image is shown below. Original (left) and perspective transformed (right):
 
-![original_perpective_lange_images](images/original_perpective_lange_images.png)
 <img src="images/original_perpective_lange_images.png" alt="images/original_perpective_lange_images" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 The perspective transform is applied to test images (left) and corresponding warped image (right).
 
-![test_image_prespective_transformation](images/test_image_prespective_transformation.png)
 <img src="images/test_image_prespective_transformation.png" alt="images/test_image_prespective_transformation" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
@@ -96,7 +89,6 @@ The perspective transform is applied to test images (left) and corresponding war
 
 The algorithm calculates the histogram on the X axis. Finds the peaks on the right and left side of the image, and collects the non-zero points within those windows. A polynomial fit is used (**np.polyfit**) to find the line model. Another polynomial fit is used to transform pixels to meters for curvature calculation. The following images shows the points found on each window:
 
-![ploy_fit_lane_images](images/ploy_fit_lane_images.png)
 <img src="images/ploy_fit_lane_images.png" alt="images/ploy_fit_lane_images" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
@@ -118,7 +110,6 @@ The vehicle center position is calculated by:
 
 The polynomials where evaluated in a lineal space using the Y coordinates. The generated points where mapped back to the image space using the inverse transformation matrix generated by the perspective transformation. 
 
-![images_plotted_on_road.png](images/images_plotted_on_road.png)
 <img src="images/images_plotted_on_road.png" alt="images/images_plotted_on_road" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 ---
