@@ -128,7 +128,7 @@ The algorithm calculates the histogram on the X axis. Example:
 
 Finds the peaks on the right and left side of the image, and collects the non-zero points within those windows. A polynomial fit is used (**np.polyfit**) to find the line model. Another polynomial fit is used to transform pixels to meters for curvature calculation. The following images shows the points found on each window:
 
-<img src="images/sliding_windows_all.png, sliding_window.png" alt="sliding_windows_all.png, sliding_window.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+<img src="images/sliding_windows_all.png" alt="sliding_windows_all.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
@@ -165,4 +165,4 @@ Here's a [link to my video result](video_output/project_video.mp4)
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-The biggest problem I had was the amount of time needed to complete this project. The pipeline will most likely fail with low color saturation images. The original submission used the S-channel. A significant effort was then invested in evaluating color channels. Using L- and V- channels defintely helped, but when there is very low light, there just is not much signal to work with. The most difficult situation is going from high light background conditions to almost no light (shade). To correct this several exponential filters were evaluated with modest success. The Jupyter notebook is great for illustrating the image processing pipeline, but a more efficient pipeline could be developed without using a notebook. Other gradients, color channels, and thresholds could be evaluated. 
+The biggest problem I had was the amount of time needed to complete this project. The pipeline will most likely fail with low color saturation images. The original submission used the S-channel. A significant effort was then invested in evaluating color channels. Using L- and V- channels defintely helped, but when there is very low light, there just is not much signal to work with. The most difficult situation is going from high light background conditions to almost no light (shade). To correct this, several exponential filters were evaluated with modest success. The Jupyter notebook is great for illustrating the image processing pipeline, but a more efficient pipeline could be developed without using a notebook. Other gradients, color channels, and thresholds could be evaluated. 
