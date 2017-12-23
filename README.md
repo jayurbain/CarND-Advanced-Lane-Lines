@@ -77,15 +77,17 @@ LAB L-Channel for (190,255) worked well:
 <img src="images/lab_l_channel_threshold_190_255.png" alt="lab_l_channel_threshold_190_255.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 HSV V-Channel for (190,255) worked well, but added noise:  
-<img src="images/lab_b_channel_threshold_190_255" alt="lab_l_channel_threshold_190_255.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+<img src="images/v_channel_threshold_120_255.png" alt="v_channel_threshold_120_255.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 RGB R-Channel for (190,255):  
-<img src="images/(r_channel_threshold_120_255.png" alt="r_channel_threshold_120_255.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+<img src="images/r_channel_threshold_120_255.png" alt="r_channel_threshold_120_255.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
  
 RGB G-Channel for (190,255):  
 <img src="images/g_channel_threshold_120_255.png" alt="g_channel_threshold_120_255.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
-HLS S-Channel for (190,255): did not work as well as expected:<img src="images/hls_sl_channel_threshold_190_255.png" alt="hls_sl_channel_threshold_190_255.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+HLS S-Channel for (190,255): did not work as well as expected:  
+
+<img src="images/hls_s_channel_threshold_190_255.png" alt="hls_s_channel_threshold_190_255.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 An ablation study was performed across all color channels for all test images. By observation, **L and V** channels appeared to have the best overall performance and were selected for the image processing pipeline. 
 
@@ -112,11 +114,7 @@ The perspective transform was verified by drawing the **src** and **dst** points
 
 <img src="images/original_perpective_lange_images.png" alt="images/original_perpective_lange_images" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
-The perspective transform is applied to test images (left) and corresponding warped image (right).
-
-<img src="images/test_image_prespective_transformation.png" alt="test_image_prespective_transformation" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
-
-** Image processing pipeline **
+Image processing pipeline with perspective transform is applied to test images (left) and corresponding warped image (right).
 
 <img src="images/unprocessed_and_processed_images.png" alt="unprocessed_and_processed_images.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
@@ -126,11 +124,11 @@ The perspective transform is applied to test images (left) and corresponding war
 
 The algorithm calculates the histogram on the X axis. Example:  
 
-<img src="images/histogram_sanity_check.png" alt="histogram_sanity_check.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+<img src="images/histogram_sanity_check.png" alt="histogram_sanity_check.png" width="300px" style="display:block; margin-left: auto; margin-right: auto;">
 
 Finds the peaks on the right and left side of the image, and collects the non-zero points within those windows. A polynomial fit is used (**np.polyfit**) to find the line model. Another polynomial fit is used to transform pixels to meters for curvature calculation. The following images shows the points found on each window:
 
-<img src="images/sliding_windows_short.png, sliding_window.png" alt="sliding_windows_short.png, sliding_window.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+<img src="images/sliding_windows_all.png, sliding_window.png" alt="sliding_windows_all.png, sliding_window.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
