@@ -52,9 +52,42 @@ Given an image, and the calibration and distortion coefficients,
 
 *Code reference: "Use color transforms, gradients, etc., to create a thresholded binary image" heading in notebook.*
 
-**cv2.cvtColor(undist, cv2.COLOR_BGR2HLS)** is used to convert and undistored **BGR** images to an **HLS** image. Only the saturation channel **'S'** is used. From the **'S'** channel,  a sobel gradient filter is applied in **X** and **Y** dimensions. Gradients in both dimensions are combined and thresholded (thresh_min=10, thresh_max=160_ into binary images as shown below:
+A significant effort was expended evaluating gradient and color channels for lane detection.
 
-<img src="images/color_sobel_thresholded_images.png" alt="images/color_sobel_thresholded_images" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+** Sobel gradient filter **  
+
+X sobel gradient filter (filter=5, min_threshold=50, max_threshold=255):
+
+<img src="images/sobel_x_gradient_50_255.png" alt="sobel_x_gradient_50_255.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+
+Combined x, y sobel gradient filter (filter=5, min_threshold=50, max_threshold=255):
+
+<img src="images/sobel_combined_x_y_gradient_5_50_255.png" alt="sobel_combined_x_y_gradient_5_50_255" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+
+*Note on Sobel gradient filter: The size of the filter had very little impact.*
+
+
+**Visualization of color space for sample image:**
+
+**cv2.cvtColor()** is used to convert and undistored **RGB** images to an **HSV**, or **HLS** image if needed.
+
+<img src="images/color_spaces.png" alt="color_spaces.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+
+LAB L-Channel for (190,255) worked well:   
+<img src="images/lab_l_channel_threshold_190_255.png" alt="lab_l_channel_threshold_190_255.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+
+HSV V-Channel for (190,255) worked well, but added noise:  
+<img src="images/lab_b_channel_threshold_190_255" alt="lab_l_channel_threshold_190_255.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+
+RGB R-Channel for (190,255):  
+<img src="images/(r_channel_threshold_120_255.png" alt="r_channel_threshold_120_255.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+ 
+RGB G-Channel for (190,255):  
+<img src="images/g_channel_threshold_120_255.png" alt="g_channel_threshold_120_255.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+
+HLS S-Channel for (190,255): did not work as well as expected:<img src="images/hls_sl_channel_threshold_190_255.png" alt="hls_sl_channel_threshold_190_255.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+
+An ablation study was performed across all color channels for all test images. By observation, **L and V** channels appeared to have the best overall performance and were selected for the image processing pipeline. 
 
 #### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
@@ -81,15 +114,23 @@ The perspective transform was verified by drawing the **src** and **dst** points
 
 The perspective transform is applied to test images (left) and corresponding warped image (right).
 
-<img src="images/test_image_prespective_transformation.png" alt="images/test_image_prespective_transformation" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+<img src="images/test_image_prespective_transformation.png" alt="test_image_prespective_transformation" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+
+** Image processing pipeline **
+
+<img src="images/unprocessed_and_processed_images.png" alt="unprocessed_and_processed_images.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
 *Code reference: "Detect lane pixels and fit to find the lane boundary" heading in notebook.*
 
-The algorithm calculates the histogram on the X axis. Finds the peaks on the right and left side of the image, and collects the non-zero points within those windows. A polynomial fit is used (**np.polyfit**) to find the line model. Another polynomial fit is used to transform pixels to meters for curvature calculation. The following images shows the points found on each window:
+The algorithm calculates the histogram on the X axis. Example:  
 
-<img src="images/ploy_fit_lane_images.png" alt="images/ploy_fit_lane_images" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+<img src="images/histogram_sanity_check.png" alt="histogram_sanity_check.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
+
+Finds the peaks on the right and left side of the image, and collects the non-zero points within those windows. A polynomial fit is used (**np.polyfit**) to find the line model. Another polynomial fit is used to transform pixels to meters for curvature calculation. The following images shows the points found on each window:
+
+<img src="images/sliding_windows_short.png, sliding_window.png" alt="sliding_windows_short.png, sliding_window.png" width="500px" style="display:block; margin-left: auto; margin-right: auto;">
 
 #### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
@@ -126,4 +167,4 @@ Here's a [link to my video result](video_output/project_video.mp4)
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-The biggest problem I had was the amount of time needed to complete this project. The pipeline will most likely fail with low color saturation images. The Jupyter notebook is great for illustrating the image processing pipeline, but a more efficient pipeline could be developed without using a notebook. Other gradients, color channels, and thresholds could be evaluated. 
+The biggest problem I had was the amount of time needed to complete this project. The pipeline will most likely fail with low color saturation images. The original submission used the S-channel. A significant effort was then invested in evaluating color channels. Using L- and V- channels defintely helped, but when there is very low light, there just is not much signal to work with. The most difficult situation is going from high light background conditions to almost no light (shade). To correct this several exponential filters were evaluated with modest success. The Jupyter notebook is great for illustrating the image processing pipeline, but a more efficient pipeline could be developed without using a notebook. Other gradients, color channels, and thresholds could be evaluated. 
